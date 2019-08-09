@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1>{{ visit.date }}</h1>
+    <article class="media content-section">
+    	<div class="media-body">
+		    <p class="m-3">{{ visit.description }}</p>
+		    <p class="m-3">{{ visit.next_steps }}</p>
+	    </div>
+    </article>
+    <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+	    <div class="modal-dialog" role="document">
+	      <div class="modal-content">
+	        <div class="modal-header">
+	          <h5 class="modal-title" id="deleteModalLabel">Remove Visit?</h5>
+	          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	            <span aria-hidden="true">&times;</span>
+	          </button>
+	        </div>
+	        <div class="modal-footer">
+	          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+	          <form action="{{ url_for('delete_visit', name=visit.fam.nhood.name, family_id=visit.fam.id, visit_id=visit.id) }}" method="POST">
+	            <input class="btn btn-danger" type="submit" value="Delete">
+	          </form>
+	        </div>
+	      </div>
+	    </div>
+  	</div>
+{% endblock content %}

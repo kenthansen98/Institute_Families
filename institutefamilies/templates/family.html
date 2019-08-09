@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1>{{ family.surname }}</h1>
+    <article class="media content-section">
+    	<div class="media-body">
+		    <h3>Members:</h3>
+		    {% for individual in individuals %}
+		    	<p style="text-indent: 40px"> {{ individual.first_name }}</p>
+		    {% endfor %}
+	    </div>
+    </article>
+    <article class="media content-section">
+		<div class="media-body">
+		    <h3>Visits:</h3>
+		    {% for visit in visits %}
+		    	<p style="text-indent: 40px"><a href="{{ url_for('visit', name=family.nhood.name, family_id=family.id, visit_id=visit.id) }}"> {{ visit.date }} </a></p>
+		    {% endfor %}
+	    </div>
+	</article>
+    <div>
+    	<a class="btn btn-primary btn-sm m-1" href="{{ url_for('add_member', name=family.nhood.name, family_id=family.id) }}">+ Add Member</a>
+    </div>
+    <div>
+    	<a class="btn btn-primary btn-sm m-1" href="{{ url_for('add_visit', name=family.nhood.name, family_id=family.id) }}">+ Add Visit</a>
+    </div>
+    <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+	    <div class="modal-dialog" role="document">
+	      <div class="modal-content">
+	        <div class="modal-header">
+	          <h5 class="modal-title" id="deleteModalLabel">Remove Family?</h5>
+	          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	            <span aria-hidden="true">&times;</span>
+	          </button>
+	        </div>
+	        <div class="modal-footer">
+	          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+	          <form action="{{ url_for('delete_family', name=family.nhood.name, family_id=family.id) }}" method="POST">
+	            <input class="btn btn-danger" type="submit" value="Delete">
+	          </form>
+	        </div>
+	      </div>
+	    </div>
+  	</div>
+{% endblock content %}

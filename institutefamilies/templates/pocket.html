@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1>{{ name }}</h1>
+    <div>
+	    {% for family in families %}
+	      <article class="media content-section mt-3">
+	        <div class="media-body">
+	          <h3><a class="article-title" href="{{ url_for('family', name=name, family_id=family.id) }}">{{ family.surname }}</a></h3>
+	          <p><strong>Address/Unit: </strong>{{ family.address }}</p>
+	        </div>
+	      </article>
+	    {% endfor %}
+    </div>
+    <div>
+    	<a class="btn btn-primary btn-sm m-1" href="{{ url_for('add_family', name=name) }}">+ Add Family</a>
+    </div>
+    <div>
+    	<button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Remove Pocket</button>
+    </div>
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+	    <div class="modal-dialog" role="document">
+	      <div class="modal-content">
+	        <div class="modal-header">
+	          <h5 class="modal-title" id="deleteModalLabel">Remove Pocket?</h5>
+	          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	            <span aria-hidden="true">&times;</span>
+	          </button>
+	        </div>
+	        <div class="modal-footer">
+	          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+	          <form action="{{ url_for('delete_pocket', name=name) }}" method="POST">
+	            <input class="btn btn-danger" type="submit" value="Delete">
+	          </form>
+	        </div>
+	      </div>
+	    </div>
+  	</div>
+{% endblock content %}

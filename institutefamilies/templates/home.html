@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1>Pockets</h1>
+    {% for pocket in pockets %}
+      <article class="media content-section">
+        <div class="media-body">
+          <h2><a class="article-title" href="{{ url_for('pocket', name=pocket.name) }}">{{ pocket.name }}</a></h2>
+        </div>
+      </article>
+    {% endfor %}
+{% endblock content %}
