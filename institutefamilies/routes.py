@@ -48,7 +48,7 @@ def family(name, family_id):
 @app.route("/pocket/<string:name>/<int:family_id>/delete", methods=['POST'])
 def delete_family(name, family_id):
 	family = Family.query.get_or_404(family_id)
-	individuals = Individual.query.filter_by(family_id)
+	individuals = Individual.query.filter_by(fam=family)
 	for individual in individuals:
 		db.session.delete(individual)
 	db.session.delete(family)
