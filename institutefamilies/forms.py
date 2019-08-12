@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, SubmitField, IntegerField, BooleanField, SelectField, DateField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, ValidationError
 from institutefamilies.models import Pocket, Family
 
 class AddPocketForm(FlaskForm):
