@@ -1,4 +1,5 @@
 from institutefamilies import db
+from datetime import datetime
 
 class Pocket(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
@@ -32,7 +33,7 @@ class Individual(db.Model):
 
 class Visit(db.Model):
 	id=db.Column(db.Integer, primary_key=True)
-	date = db.Column(db.String(30), nullable=False)
+	date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 	description = db.Column(db.Text, nullable=False)
 	next_steps = db.Column(db.Text, nullable=False)
 	family_id = db.Column(db.Integer, db.ForeignKey('family.id'), nullable=False)

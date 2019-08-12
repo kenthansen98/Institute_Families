@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, SubmitField, IntegerField, BooleanField, SelectField
+from wtforms import StringField, TextAreaField, SubmitField, IntegerField, BooleanField, SelectField, DateField
 from wtforms.validators import DataRequired
 from institutefamilies.models import Pocket, Family
 
@@ -30,7 +30,7 @@ class AddIndividualForm(FlaskForm):
 	submit = SubmitField('Add')
 
 class AddVisitForm(FlaskForm):
-	date = StringField('Date of Visit', validators=[DataRequired()])
+	date = DateField('Date of Visit', validators=[DataRequired()], format='%Y-%m-%d')
 	description = TextAreaField('Description', validators=[DataRequired()])
 	next_steps = TextAreaField('Next Steps', validators=[DataRequired()])
 	submit = SubmitField('Add')
