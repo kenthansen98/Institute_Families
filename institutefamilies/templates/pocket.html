@@ -2,7 +2,7 @@
 {% block content %}
     <h1>{{ name }}</h1>
     <div>
-	    {% for family in families %}
+	    {% for family in families.items %}
 	      <article class="media content-section mt-3">
 	        <div class="media-body">
 	          <h3><a class="article-title" href="{{ url_for('family', name=name, family_id=family.id) }}">{{ family.surname }}</a></h3>
@@ -15,7 +15,10 @@
     	<a class="btn btn-primary btn-sm m-1" href="{{ url_for('add_family', name=name) }}">+ Add Family</a>
     </div>
     <div>
-    	<button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Remove Pocket</button>
+    	<a class="btn btn-primary btn-sm m-1" href="{{ url_for('add_activity', name=name) }}">+ Add Activity</a>
+    </div>
+    <div>
+    	<button type="button" class="btn btn-danger btn-sm m-1 mb-4" data-toggle="modal" data-target="#deleteModal">Remove Pocket</button>
     </div>
     <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
 	    <div class="modal-dialog" role="document">
@@ -35,4 +38,30 @@
 	      </div>
 	    </div>
   	</div>
+  	{% for page_num in families.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+    	{% if page_num %}
+	    	{% if families.page == page_num %}
+	        	<a class="btn btn-info mb-4" href="{{ url_for('pocket', name=name, page=page_num) }}">{{ page_num }}</a>
+	      	{% else %}
+	        	<a class="btn btn-outline-info mb-4" href="{{ url_for('pocket', name=name, page=page_num) }}">{{ page_num }}</a>
+	      	{% endif %}
+    	{% else %}
+    		...
+    	{% endif %}
+    {% endfor %}
 {% endblock content %}
+{% block sidebar %}
+	<div class="col-md-4">
+	    <div class="content-section">
+	        <h3>Activities</h3>
+	        <p class='text-muted'>
+	          <ul class="list-group">
+	          	{% for activity in activities %}
+          			<li class="list-group-item list-group-item-light">{{ activity.type_activity }}</li>
+	          	{% endfor %}
+	          </ul>
+	        </p>
+	    </div>
+	</div>
+{% endblock sidebar %}
+

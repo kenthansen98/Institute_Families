@@ -1,11 +1,22 @@
 {% extends "layout.html" %}
 {% block content %}
     <h1>Pockets</h1>
-    {% for pocket in pockets %}
+    {% for pocket in pockets.items %}
       <article class="media content-section">
         <div class="media-body">
           <h2><a class="article-title" href="{{ url_for('pocket', name=pocket.name) }}">{{ pocket.name }}</a></h2>
         </div>
       </article>
+    {% endfor %}
+    {% for page_num in pockets.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+    	{% if page_num %}
+	    	{% if pockets.page == page_num %}
+	        	<a class="btn btn-info mb-4" href="{{ url_for('home', page=page_num) }}">{{ page_num }}</a>
+	      	{% else %}
+	        	<a class="btn btn-outline-info mb-4" href="{{ url_for('home', page=page_num) }}">{{ page_num }}</a>
+	      	{% endif %}
+    	{% else %}
+    		...
+    	{% endif %}
     {% endfor %}
 {% endblock content %}

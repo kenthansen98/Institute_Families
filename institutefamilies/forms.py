@@ -1,11 +1,10 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, SubmitField, IntegerField, BooleanField, SelectField, DateField
 from wtforms.validators import DataRequired, ValidationError
-from institutefamilies.models import Pocket, Family
+from institutefamilies.models import Pocket, Family, Activity
 
 class AddPocketForm(FlaskForm):
 	name = StringField('Name', validators=[DataRequired()])
-	num_activities = IntegerField('Number of Core Activities', validators=[DataRequired()])
 	pioneers = BooleanField('Do pioneers live in this pocket?')
 	submit = SubmitField('Add')
 
@@ -14,19 +13,20 @@ class AddPocketForm(FlaskForm):
 		if pocket:
 			raise ValidationError('That pocket is already in the system.')
 
+class AddActivityForm(FlaskForm):
+	type_activity = SelectField('Core Activity', choices=[('None', 'None'), ('Study Circle','Study Circle'), ('Childrens Class', 'Childrens Class'), ('Junior Youth Group', 'Junior Youth Group'), ('Devotional', 'Devotional')])
+	facilitator = StringField('Tutor/Teacher/Animator/Host', validators=[DataRequired()])
+	submit = SubmitField('Add')
+
 class AddFamilyForm(FlaskForm):
 	surname = StringField('Surname', validators=[DataRequired()])
 	address = StringField('Address/Unit Number', validators=[DataRequired()])
 	submit = SubmitField('Add')
 
-	def validate_address(self, address):
-		family = Family.query.filter_by(address=address.data).first()
-		if family:
-			raise ValidationError('That address is already associated with a family.')
-
 class AddIndividualForm(FlaskForm):
 	first_name = StringField('First Name', validators=[DataRequired()])
-	activity = SelectField('Core Activity', choices=[('no', 'None'), ('sc','Study Circle'), ('cc', 'Childrens Class'), ('jyg', 'Junior Youth Group'), ('dv', 'Devotional')])
+	age = StringField('Age (if unknown specify age category)', validators=[DataRequired()])
+	activity = SelectField('Activity', choices=[], coerce=str)
 	submit = SubmitField('Add')
 
 class AddVisitForm(FlaskForm):

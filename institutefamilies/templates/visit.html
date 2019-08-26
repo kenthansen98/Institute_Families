@@ -1,12 +1,17 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h1>{{ visit.date }}</h1>
+    <h1>{{ visit.date.strftime("%B %d, %Y") }}</h1>
     <article class="media content-section">
     	<div class="media-body">
+    		<h3 class="m-2">Description</h3>
 		    <p class="m-3">{{ visit.description }}</p>
+		    <h3 class="m-2">Next Steps</h3>
 		    <p class="m-3">{{ visit.next_steps }}</p>
 	    </div>
     </article>
+    <div>
+    	<a class="btn btn-primary btn-sm m-1" href="{{ url_for('update_visit', name=visit.fam.nhood.name, family_id=visit.fam.id, visit_id=visit.id)}}">Edit</a>
+    </div>
     <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
     <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
 	    <div class="modal-dialog" role="document">

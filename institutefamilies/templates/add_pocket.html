@@ -18,19 +18,6 @@
                         {{ form.name(class="form-control form-control-lg") }}
                     {% endif %}
                 </div>
-                <div class="form-group">
-                    {{ form.num_activities.label(class="form-control-label") }}
-                    {% if form.num_activities.errors %}
-                        {{ form.num_activities(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.num_activities.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.num_activities(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
                 <div class="form-check">
                 	{{ form.pioneers(class="form-check-input") }}
                 	{{ form.pioneers.label(class="form-check-label") }}		
