@@ -7,12 +7,12 @@
 		    {% for individual in individuals %}
 		    	<p>
 		    		<i class="material-icons" style="font-size:13px;">
-		    			<a href="#" data-toggle="modal" data-target="#deleteModal1">delete</a>
+		    			<a href="#" data-toggle="modal" data-target="#deleteModal{{ individual.id }}">delete</a>
 		    		</i> 
 		    		<i class="material-icons" style="font-size:13px;"><a href="{{ url_for('update_member', name=family.nhood.name, family_id=family.id, individual_id=individual.id) }}">border_color</a></i> 
 		    		{{ individual.first_name }} ({{ individual.age }})
 		    	</p>
-				<div class="modal fade" id="deleteModal1" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+				<div class="modal fade" id="deleteModal{{ individual.id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
 				    <div class="modal-dialog" role="document">
 				      	<div class="modal-content">
 				        	<div class="modal-header">
