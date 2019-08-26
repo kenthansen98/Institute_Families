@@ -57,7 +57,35 @@
 	        <p class='text-muted'>
 	          <ul class="list-group">
 	          	{% for activity in activities %}
-          			<li class="list-group-item list-group-item-light">{{ activity.type_activity }}</li>
+          			<li class="list-group-item list-group-item-light">
+          				<p style="text-align: left;">
+	      					{{ activity.name }}
+	      					<span style="float: right;">
+		  						<i class="material-icons" style="font-size:13px;">
+		    						<a href="#" data-toggle="modal" data-target="#deleteModal{{ activity.id }}">delete</a>
+		    					</i>
+		    					<i class="material-icons" style="font-size:13px;"><a href="{{ url_for('update_activity', name=activity.nhood.name, activity_id=activity.id) }}">border_color</a></i> 
+	    					</span>
+    					</p>
+          			</li>
+          			<div class="modal fade" id="deleteModal{{ activity.id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+					    <div class="modal-dialog" role="document">
+					      	<div class="modal-content">
+					        	<div class="modal-header">
+					          		<h5 class="modal-title" id="deleteModalLabel">Remove Activity?</h5>
+					          		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					            		<span aria-hidden="true">&times;</span>
+					          		</button>
+					        	</div>
+					        	<div class="modal-footer">
+					          		<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					          		<form action="{{ url_for('delete_activity', name=activity.nhood.name, activity_id=activity.id) }}" method="POST">
+					            		<input class="btn btn-danger" type="submit" value="Delete">
+					          		</form>
+					        	</div>
+					      	</div>
+					    </div>
+			  		</div>
 	          	{% endfor %}
 	          </ul>
 	        </p>

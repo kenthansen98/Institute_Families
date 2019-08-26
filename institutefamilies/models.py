@@ -13,8 +13,10 @@ class Pocket(db.Model):
 
 class Activity(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
+	name = db.Column(db.String(50), nullable=False, unique=True)
 	type_activity = db.Column(db.String(20), nullable=False)
 	facilitator = db.Column(db.String(50), nullable=False)
+	participants = db.relationship('Individual', backref='act', lazy=True)
 	pocket_id = db.Column(db.Integer, db.ForeignKey('pocket.id'), nullable=False)
 
 class Family(db.Model):
@@ -32,8 +34,9 @@ class Individual(db.Model):
 	id=db.Column(db.Integer, primary_key=True)
 	first_name = db.Column(db.String(20), nullable=False)
 	age = db.Column(db.String(10), nullable=False)
-	activity = db.Column(db.String(20), nullable=False)
+	activity = db.Column(db.String(50))
 	family_id = db.Column(db.Integer, db.ForeignKey('family.id'), nullable=False)
+	activity_id = db.Column(db.Integer, db.ForeignKey('activity.id'))
 
 	def __repr__(self):
 		return f"Individual('{self.first_name}', '{self.age}')"

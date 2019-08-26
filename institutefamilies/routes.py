@@ -45,12 +45,37 @@ def add_activity(name):
 	form = AddActivityForm()
 	if form.validate_on_submit():
 		current_pocket = Pocket.query.filter_by(name=name).first_or_404()
-		activity = Activity(type_activity=form.type_activity.data, facilitator=form.facilitator.data, nhood=current_pocket)
+		activity = Activity(name=form.name.data, type_activity=form.type_activity.data, facilitator=form.facilitator.data, nhood=current_pocket)
 		db.session.add(activity)
 		db.session.commit()
 		flash('Acitivty added!', 'success')
 		return redirect(url_for('pocket', name=name))
 	return render_template('add_activity.html', title='Add Activity', form=form, legend='Add Activity')
+
+@app.route("/pocket/<string:name>/<int:activity_id>/delete_activity", methods=['POST'])
+def delete_activity(name, activity_id):
+	activity = Activity.query.get_or_404(activity_id)
+	db.session.delete(activity)
+	db.session.commit()
+	flash('Activity deleted', 'success')
+	return redirect(url_for('pocket', name=name))
+
+@app.route("/pocket/<string:name>/<int:activity_id>/update_activity", methods=['GET', 'POST'])
+def update_activity(name, activity_id):
+	activity = Activity.query.get_or_404(activity_id)
+	form = AddActivityForm()
+	if form.validate_on_submit():
+		activity.name = form.name.data
+		activity.type_activity = form.type_activity.data
+		activity.facilitator = form.facilitator.data
+		db.session.commit()
+		flash('The activity has been updated', 'success')
+		return redirect(url_for('pocket', name=name))
+	elif request.method == 'GET':
+		form.name.data = activity.name
+		form.type_activity.data = activity.type_activity
+		form.facilitator.data = activity.facilitator
+	return render_template('add_activity.html', title='Update Activity', form=form, legend='Update Activity')
 
 @app.route("/pocket/<string:name>/new_family", methods=['GET', 'POST'])
 def add_family(name):
@@ -101,10 +126,11 @@ def update_family(name, family_id):
 def add_member(name, family_id):
 	form = AddIndividualForm()
 	pocket = Pocket.query.filter_by(name=name).first_or_404()
-	form.activity.choices = [(activity.type_activity, activity.type_activity) for activity in Activity.query.filter_by(nhood=pocket).all()]
+	form.activity.choices = [("", "---")]+[(activity.name, activity.name) for activity in Activity.query.filter_by(nhood=pocket).all()]
 	if form.validate_on_submit():
 		current_family = Family.query.filter_by(id=family_id).first_or_404()
-		individual = Individual(first_name=form.first_name.data, age=form.age.data, activity=form.activity.data, fam=current_family)
+		activity = Activity.query.filter_by(name=form.activity.data).first()
+		individual = Individual(first_name=form.first_name.data, age=form.age.data, activity=form.activity.data, fam=current_family, act=activity)
 		db.session.add(individual)
 		db.session.commit()
 		flash('Individual Added!', 'success')
@@ -116,11 +142,12 @@ def update_member(name, family_id, individual_id):
 	individual = Individual.query.get_or_404(individual_id)
 	form = AddIndividualForm()
 	pocket = Pocket.query.filter_by(name=name).first_or_404()
-	form.activity.choices = [(activity.type_activity, activity.type_activity) for activity in Activity.query.filter_by(nhood=pocket).all()]
+	form.activity.choices = [("", "---")]+[(activity.name, activity.name) for activity in Activity.query.filter_by(nhood=pocket).all()]
 	if form.validate_on_submit():
 		individual.first_name = form.first_name.data
 		individual.age = form.age.data
 		individual.activity = form.activity.data
+		individual.act = Activity.query.filter_by(name=form.activity.data).first()
 		db.session.commit()
 		flash('The individual has been updated', 'success')
 		return redirect(url_for('family', name=name, family_id=family_id))
