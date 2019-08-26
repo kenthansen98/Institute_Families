@@ -21,7 +21,7 @@ class Activity(db.Model):
 
 class Family(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	surname = db.Column(db.String(20), nullable=False)
+	surname = db.Column(db.String(50), nullable=False)
 	address = db.Column(db.String(50), nullable=False)
 	pocket_id = db.Column(db.Integer, db.ForeignKey('pocket.id'), nullable=False)
 	individuals = db.relationship('Individual', backref='fam', lazy=True)

@@ -40,6 +40,10 @@ def delete_pocket(name):
 	flash('Pocket deleted', 'success')
 	return redirect(url_for('home'))
 
+#@app.route("/pocket/<string:name/acivity/<string:activity_name")
+#def activity(name, activity_name):
+
+
 @app.route("/pocket/<string:name>/add_activity", methods=['GET', 'POST'])
 def add_activity(name):
 	form = AddActivityForm()
