@@ -1,7 +1,7 @@
 from flask import render_template, url_for, flash, redirect, request
 from institutefamilies import app, db
-from institutefamilies.forms import AddPocketForm, AddFamilyForm, AddIndividualForm, AddVisitForm, AddActivityForm
-from institutefamilies.models import Pocket, Family, Individual, Visit, Activity
+from institutefamilies.forms import AddPocketForm, AddFamilyForm, AddIndividualForm, AddVisitForm, AddActivityForm, AddReflectionForm
+from institutefamilies.models import Pocket, Family, Individual, Visit, Activity, Reflection
 
 @app.route("/")
 @app.route("/home")
@@ -40,9 +40,52 @@ def delete_pocket(name):
 	flash('Pocket deleted', 'success')
 	return redirect(url_for('home'))
 
-#@app.route("/pocket/<string:name/acivity/<string:activity_name")
-#def activity(name, activity_name):
+@app.route("/pocket/<string:name>/activity/<string:activity_name>")
+def activity(name, activity_name):
+	activity = Activity.query.filter_by(name=activity_name).first_or_404()
+	reflections = Reflection.query.filter_by(act=activity).order_by(Reflection.date.desc())
+	participants = Individual.query.filter_by(act=activity).order_by(Individual.first_name.asc())
+	return render_template('activity.html', title=activity_name, legend=activity_name, activity=activity, reflections=reflections, participants=participants)
 
+@app.route("/pocket/<string:name>/activity/<string:activity_name>/add_reflection", methods=['GET', 'POST'])
+def add_reflection(name, activity_name):
+	form = AddReflectionForm()
+	if form.validate_on_submit():
+		activity = Activity.query.filter_by(name=activity_name).first_or_404()
+		reflection = Reflection(date=form.date.data, description=form.description.data, act=activity)
+		db.session.add(reflection)
+		db.session.commit()
+		flash('Reflection added!', 'success')
+		return redirect(url_for('activity', name=name, activity_name=activity_name))
+	return render_template('add_reflection.html', title='Add Reflection', form=form, legend='Add Reflection')
+
+@app.route("/pocket/<string:name>/activity/<string:activity_name>/reflection/<int:reflection_id>")
+def reflection(name, activity_name, reflection_id):
+	reflection = Reflection.query.filter_by(id=reflection_id).first_or_404()
+	return render_template('reflection.html', reflection=reflection)
+
+@app.route("/pocket/<string:name>/activity/<string:activity_name>/reflection/<int:reflection_id>/delete_reflection", methods=['POST'])
+def delete_reflection(name, activity_name, reflection_id):
+	reflection = Reflection.query.get_or_404(reflection_id)
+	db.session.delete(reflection)
+	db.session.commit()
+	flash('Reflection deleted', 'success')
+	return redirect(url_for('activity', name=name, activity_name=activity_name))
+
+@app.route("/pocket/<string:name>/activity/<string:activity_name>/reflection/<int:reflection_id>/update_reflection", methods=['GET','POST'])
+def update_reflection(name, activity_name, reflection_id):
+	reflection = Reflection.query.get_or_404(reflection_id)
+	form = AddReflectionForm()
+	if form.validate_on_submit():
+		reflection.date = form.date.data
+		reflection.description = form.description.data
+		db.session.commit()
+		flash('The reflection has been updated', 'success')
+		return redirect(url_for('reflection', name=name, activity_name=activity_name, reflection_id=reflection_id))
+	elif request.method == 'GET':
+		#form.date.data = reflection.date
+		form.description.data = reflection.description
+	return render_template('add_reflection.html', title='Update Reflection', form=form, legend='Update Reflection')
 
 @app.route("/pocket/<string:name>/add_activity", methods=['GET', 'POST'])
 def add_activity(name):

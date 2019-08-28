@@ -40,3 +40,8 @@ class AddVisitForm(FlaskForm):
 	description = TextAreaField('Description', validators=[DataRequired()])
 	next_steps = TextAreaField('Next Steps', validators=[DataRequired()])
 	submit = SubmitField('Add')
+
+class AddReflectionForm(FlaskForm):
+	date = DateField('Date of Reflection', validators=[DataRequired()], format='%Y-%m-%d')
+	description = TextAreaField('Reflections', validators=[DataRequired()])
+	submit = SubmitField('Add')

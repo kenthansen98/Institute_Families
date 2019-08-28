@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1>{{ legend }}</h1>
+    <article class="media content-section">
+        <div class="media-body">
+            <h3>Participants</h3>
+            {% for participant in participants %}
+                <p style="text-indent: 40px">{{ participant.first_name }}</p>
+            {% endfor %}
+        </div>
+    </article>
+    <article class="media content-section">
+        <div class="media-body">
+            <h3>Reflections</h3>
+            {% for reflection in reflections %}
+                <p style="text-indent: 40px"><a href="{{ url_for('reflection', name=activity.nhood.name, activity_name=activity.name, reflection_id=reflection.id) }}"> {{ reflection.date.strftime("%B %d, %Y") }} </a></p>
+            {% endfor %}
+        </div>
+    </article>
+    <div>
+        <a class="btn btn-primary btn-sm m-1" href="{{ url_for('add_reflection', name=activity.nhood.name, activity_name=activity.name) }}">+ Add Reflection</a>
+    </div>
+{% endblock content %}

@@ -13,10 +13,11 @@ class Pocket(db.Model):
 
 class Activity(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	name = db.Column(db.String(50), nullable=False, unique=True)
+	name = db.Column(db.String(50), nullable=False)
 	type_activity = db.Column(db.String(20), nullable=False)
 	facilitator = db.Column(db.String(50), nullable=False)
 	participants = db.relationship('Individual', backref='act', lazy=True)
+	reflections = db.relationship('Reflection', backref='act', lazy=True)
 	pocket_id = db.Column(db.Integer, db.ForeignKey('pocket.id'), nullable=False)
 
 class Family(db.Model):
@@ -50,3 +51,10 @@ class Visit(db.Model):
 
 	def __repr__(self):
 		return f"Visit('{self.date}')"
+
+class Reflection(db.Model):
+	id=db.Column(db.Integer, primary_key=True)
+	date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+	description = db.Column(db.Text, nullable=False)
+	activity_id = db.Column(db.Integer, db.ForeignKey('activity.id'), nullable=False)
+

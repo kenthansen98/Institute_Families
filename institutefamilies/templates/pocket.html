@@ -59,7 +59,7 @@
 	          	{% for activity in activities %}
           			<li class="list-group-item list-group-item-light">
           				<p style="text-align: left;">
-	      					{{ activity.name }}
+	      					<a href="{{ url_for('activity', name=name, activity_name=activity.name) }}">{{ activity.name }}</a>
 	      					<span style="float: right;">
 		  						<i class="material-icons" style="font-size:13px;">
 		    						<a href="#" data-toggle="modal" data-target="#deleteModal{{ activity.id }}">delete</a>
