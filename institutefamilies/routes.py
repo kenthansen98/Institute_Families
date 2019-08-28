@@ -15,7 +15,7 @@ def pocket(name):
 	pocket = Pocket.query.filter_by(name=name).first_or_404()
 	page = request.args.get('page', 1, type=int)
 	families = Family.query.filter_by(nhood=pocket).order_by(Family.surname.asc()).paginate(page=page, per_page=5)
-	activities = Activity.query.filter_by(nhood=pocket)
+	activities = Activity.query.filter_by(nhood=pocket).order_by(Activity.name.asc())
 	return render_template('pocket.html', title=name, name=name, families=families, activities=activities)
 
 @app.route("/pocket/new", methods=['GET', 'POST'])
