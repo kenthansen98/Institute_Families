@@ -1,7 +1,7 @@
 from flask import render_template, url_for, flash, redirect, request
 from institutefamilies import app, db
-from institutefamilies.forms import AddPocketForm, AddFamilyForm, AddIndividualForm, AddVisitForm, AddActivityForm, AddReflectionForm
-from institutefamilies.models import Pocket, Family, Individual, Visit, Activity, Reflection
+from institutefamilies.forms import AddPocketForm, AddFamilyForm, AddIndividualForm, AddVisitForm, AddActivityForm, AddReflectionForm, AddMeetingForm
+from institutefamilies.models import Pocket, Family, Individual, Visit, Activity, Reflection, Meeting
 
 @app.route("/")
 @app.route("/home")
@@ -39,6 +39,51 @@ def delete_pocket(name):
 	db.session.commit()
 	flash('Pocket deleted', 'success')
 	return redirect(url_for('home'))
+
+@app.route("/meeting_log")
+def meeting_log():
+	page = request.args.get('page', 1, type=int)
+	meetings = Meeting.query.order_by(Meeting.date.desc()).paginate(page=page, per_page=8)
+	return render_template('meeting_log.html', meetings=meetings)
+
+@app.route("/meeting_log/<int:meeting_id>")
+def meeting(meeting_id):
+	meeting = Meeting.query.get_or_404(meeting_id)
+	return render_template('meeting.html', meeting=meeting)
+
+@app.route("/meeting_log/add_meeting", methods=['GET', 'POST'])
+def add_meeting():
+	form = AddMeetingForm()
+	if form.validate_on_submit():
+		meeting = Meeting(date=form.date.data, description=form.description.data)
+		db.session.add(meeting)
+		db.session.commit()
+		flash('Meeting added!', 'success')
+		return redirect(url_for('meeting_log'))
+	return render_template('add_meeting.html', title='Add Meeting', form=form, legend='Add Meeting')
+
+@app.route("/meeting_log/<int:meeting_id>/delete_meeting", methods=['POST'])
+def delete_meeting(meeting_id):
+	meeting = Meeting.query.get_or_404(meeting_id)
+	db.session.delete(meeting)
+	db.session.commit()
+	flash('Meeting deleted', 'success')
+	return redirect(url_for('meeting_log'))
+
+@app.route("/meeting_log/<int:meeting_id>/update_meeting", methods=['GET','POST'])
+def update_meeting(meeting_id):
+	meeting = Meeting.query.get_or_404(meeting_id)
+	form = AddMeetingForm()
+	if form.validate_on_submit():
+		meeting.date = form.date.data
+		meeting.description = form.description.data
+		db.session.commit()
+		flash('The meeting has been updated', 'success')
+		return redirect(url_for('meeting', meeting_id=meeting_id))
+	elif request.method == 'GET':
+		#form.date.data = meeting.date
+		form.description.data = meeting.description
+	return render_template('add_meeting.html', title='Update Meeting', form=form, legend='Update Meeting')
 
 @app.route("/pocket/<string:name>/activity/<string:activity_name>")
 def activity(name, activity_name):

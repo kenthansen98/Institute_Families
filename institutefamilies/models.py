@@ -58,3 +58,8 @@ class Reflection(db.Model):
 	description = db.Column(db.Text, nullable=False)
 	activity_id = db.Column(db.Integer, db.ForeignKey('activity.id'), nullable=False)
 
+class Meeting(db.Model):
+	id=db.Column(db.Integer, primary_key=True)
+	date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+	description = db.Column(db.Text, nullable=False)
+

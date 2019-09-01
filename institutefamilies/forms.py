@@ -45,3 +45,10 @@ class AddReflectionForm(FlaskForm):
 	date = DateField('Date of Reflection', validators=[DataRequired()], format='%Y-%m-%d')
 	description = TextAreaField('Reflections', validators=[DataRequired()])
 	submit = SubmitField('Add')
+
+class AddMeetingForm(FlaskForm):
+	date = DateField('Date of Meeting', validators=[DataRequired()], format='%Y-%m-%d')
+	description = TextAreaField('Meeting', validators=[DataRequired()])
+	submit = SubmitField('Add')
+
+
