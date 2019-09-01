@@ -1,5 +1,13 @@
 {% extends "layout.html" %}
 {% block content %}
+	<div>
+		<button class="mb-2" onclick="goBack()"><i class="material-icons mt-1">arrow_back</i></button>
+		<script>
+			function goBack() {
+			  window.history.back();
+			}
+		</script>
+	</div>
     <h1>{{ family.surname }}</h1>
     <article class="media content-section">
     	<div class="media-body">
